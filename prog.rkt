@@ -2,7 +2,6 @@
 
 ;; Required for bitmap drawing
 (require racket/draw)
-(require racket/random)
 
 (define target-width  1920) ; gotta get that 1080p boi
 (define target-height 1080)
@@ -19,7 +18,7 @@
 
 ;; Functions to pull from and use
 (define the-functions
-  (list
+  (vector
     (λ (z c) (+ c (expt z 2)))
     (λ (z c) (+ c (expt z 3)))
     (λ (z c) (+ c (exp z)))
@@ -30,7 +29,7 @@
 
 ;; Pull a random function
 (define (random-function)
-  (random-ref the-functions))
+  (vector-ref the-functions (random (vector-length the-functions))))
 
 ;; Define a random complex function (yes I compressed it on purpose)
 (define (random-complex)
