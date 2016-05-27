@@ -35,10 +35,16 @@ def main(*args, **kwargs):
     """
     Upload a file to a Twitter account
     """
-    print("Uploading to Twitter...")
-    api = create_api(read_keys())
-    api.update_with_media("output.png")
-    print("Done.")
+    unuploaded = True
+    while unuploaded:
+        try:
+            print("Uploading to Twitter...")
+            api = create_api(read_keys())
+            api.update_with_media("output.png")
+            unuploaded = False
+            print("Done.")
+        except Exception as e:
+            print("Error: {}".format(e))
 
 if __name__ == "__main__":
     main()
