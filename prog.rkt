@@ -27,6 +27,10 @@
     (λ (z c) (+ c (* (expt z 2) (exp z))))
     (λ (z c) (+ c (sin z)))))
 
+;; Random range function for older Racket versions
+(define (randomp low high)
+  (inexact->exact (round (+ low (* (random) (- high low))))))
+
 ;; Pull a random function
 (define (random-function)
   (vector-ref the-functions (random (vector-length the-functions))))
@@ -53,8 +57,8 @@
 
 ;; Choose random values to use for the coloring function
 (define (pick-numbers)
-  (define lefty  (random 1 32))
-  (define righty (random 1 (- 32 lefty)))
+  (define lefty  (randomp 1 32))
+  (define righty (randomp 1 (- 32 lefty)))
   (values lefty righty))
 
 ;; Create a color factory that has different modulos every creation
