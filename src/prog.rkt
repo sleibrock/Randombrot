@@ -108,12 +108,14 @@
   (random-fractal)
   (if 
     (> 15000 (file-size file-output-path))
-    (displayln "Fractal generated too small")
-    (displayln "Restarting creation...")
-    (main))
-  (displayln "Uploading...")
-  (system* "upload.py")
-  (displayln "Sleeping... ( -ل͟-) Zzzzzzz")
-  (sleep sleep-time)
-  (main))
+        (begin
+         (displayln "Fractal generated too small")
+         (displayln "Restarting creation...")
+         (main))
+        (begin
+         (displayln "Uploading...")
+         (system* "upload.py")
+         (displayln "Sleeping... ( -ل͟-) Zzzzzzz")
+         (sleep sleep-time)
+         (main))))
 
