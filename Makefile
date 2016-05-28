@@ -4,7 +4,9 @@ setup:
 	chmod +x upload.py
 	echo "Fill out a keys.txt with your consumer/access tokens/secrets"
 run:
-	racket prog.rkt
+	racket main.rkt
+test:
+	racket test.rkt
 setup_env:
 	virtualenv dev
 env:

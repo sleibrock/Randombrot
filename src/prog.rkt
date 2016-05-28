@@ -3,6 +3,11 @@
 ;; Required for bitmap drawing
 (require racket/draw)
 
+(provide 
+  randomp
+  random-fractal
+  main)
+
 (define target-width  1920) ; gotta get that 1080p boi
 (define target-height 1080)
 (define magnification    1)
@@ -107,5 +112,3 @@
   (sleep sleep-time)
   (main))
 
-;; Start the service
-(main)
