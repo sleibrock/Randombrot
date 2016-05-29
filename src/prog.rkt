@@ -9,9 +9,9 @@
   random-fractal
   main)
 
-(define target-width  1920) ; gotta get that 1080p boi
-(define target-height 1080)
-(define magnification    1)
+(define target-width  1024) ; 1080p gets resized to 1024x576 
+(define target-height  576)
+(define magnification  1.0)
 (define x-scale  (/ 3.0 magnification))
 (define y-scale  (/ 3.0 magnification))
 (define x-offset (/ x-scale 1.25))
@@ -29,7 +29,7 @@
 
 ;; Pull a random function
 (define (random-function)
-  (define exp-var (randomp 2 max-exp))
+  (define exp-var (exact->inexact (randomp 2 max-exp)))
   (λ (z c) (+ c (expt z exp-var))))
 
 ;; Define a random complex function (yes I compressed it on purpose)
@@ -97,12 +97,7 @@
 ; Create a fractal, upload it by calling the upload function, sleep for 1 hour
 (define (main)
   (displayln "Creating fractal...")
-  (random-fractal)
-  (when
-    (< 12000 (file-size file-output-path))
-    (displayln "Fractal generated too small")
-    (displayln "Remaking fractal...")
-    (main))
+  (time (random-fractal))
   (displayln "Uploading...")
   (system* "upload.py")
   (displayln "Sleeping... ( -ل͟-) Zzzzzzz")
