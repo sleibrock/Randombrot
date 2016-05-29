@@ -46,11 +46,11 @@
          (list a b c))))
 
 ;; Process a function until it diverges or reaches maximum iteration (255)
-(define (iterate f a z i)
-  (define zp (f a z))
+(define (iterate f z c i)
+  (define zp (f z c))
   (if (or (= i max-iter) (> (magnitude zp) 2))
     i
-    (iterate f a zp (add1 i))))
+    (iterate f zp c (add1 i))))
 
 ;; Choose random values to use for the coloring function
 (define (pick-numbers)
@@ -80,7 +80,7 @@
     (define real-y (- (* y-scale (/ y hei)) y-offset))
     (send dc set-pen
           (iter->color
-            (iterate fun (make-rectangular real-x real-y) cvar 0))
+            (iterate fun cvar (make-rectangular real-x real-y) 0))
           1 'solid)
     (send dc draw-point x y))
   (send target save-file fpath 'png))
