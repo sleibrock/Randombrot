@@ -5,6 +5,7 @@
 
 (provide 
   randomp
+  make-fractal
   random-fractal
   main)
 
@@ -17,7 +18,7 @@
 (define y-offset (/ y-scale 2.0))
 (define sleep-time 3600) ; sleep for an hour
 (define max-iter 255)
-(define rand-scale 2)
+(define rand-scale 1)
 
 (define file-output-path "output.png")
 
