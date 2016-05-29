@@ -16,7 +16,7 @@
 (define y-scale  (/ 3.0 magnification))
 (define x-offset (/ x-scale 1.25))
 (define y-offset (/ y-scale 2.0))
-(define sleep-time 3600) ; sleep for an hour
+(define sleep-time 1800) ; sleep for an hour
 (define max-iter 255)
 (define rand-scale 1)
 (define max-exp 10)
