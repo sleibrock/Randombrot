@@ -23,14 +23,23 @@
 
 (define file-output-path "output.png")
 
-;; Random range function for older Racket versions
-(define (randomp low high)
-  (inexact->exact (round (+ low (* (random) (- high low))))))
+(define the-functions 
+  (vector		
+    (λ (z c) (+ c (expt z 2)))		
+    (λ (z c) (+ c (expt z 3)))		
+    (λ (z c) (+ c (exp z)))		
+    (λ (z c) (+ c (exp (expt z 2))))		
+    (λ (z c) (+ c (exp (expt z 3))))		
+    (λ (z c) (+ c (* (expt z 2) (exp z))))		
+    (λ (z c) (+ c (sin z)))))
 
 ;; Pull a random function
 (define (random-function)
-  (define exp-var (exact->inexact (randomp 2 max-exp)))
-  (λ (z c) (+ c (expt z exp-var))))
+  (vector-ref the-functions (random (vector-length the-functions))))
+
+;; Random range function for older Racket versions
+(define (randomp low high)
+  (inexact->exact (round (+ low (* (random) (- high low))))))
 
 ;; Define a random complex function (yes I compressed it on purpose)
 (define (random-complex)
