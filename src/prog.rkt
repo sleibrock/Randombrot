@@ -13,9 +13,9 @@
 (define target-height  576)
 (define magnification  1.0)
 (define x-scale  (/ 3.0 magnification))
-(define y-scale  (/ 3.0 magnification))
-(define x-offset (/ x-scale 1.25))
-(define y-offset (/ y-scale 2.0))
+(define y-scale  (/ 2.5 magnification))
+(define x-offset 2.25)
+(define y-offset 1.25)
 (define sleep-time 1800) ; sleep for an hour
 (define max-iter 255)
 (define rand-scale 1)
