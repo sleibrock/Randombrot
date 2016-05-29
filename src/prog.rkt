@@ -19,19 +19,9 @@
 (define sleep-time 3600) ; sleep for an hour
 (define max-iter 255)
 (define rand-scale 1)
+(define max-exp 10)
 
 (define file-output-path "output.png")
-
-;; Functions to pull from and use
-(define the-functions
-  (vector
-    (λ (z c) (+ c (expt z 2)))
-    (λ (z c) (+ c (expt z 3)))
-    (λ (z c) (+ c (exp z)))
-    (λ (z c) (+ c (exp (expt z 2))))
-    (λ (z c) (+ c (exp (expt z 3))))
-    (λ (z c) (+ c (* (expt z 2) (exp z))))
-    (λ (z c) (+ c (sin z)))))
 
 ;; Random range function for older Racket versions
 (define (randomp low high)
@@ -39,7 +29,8 @@
 
 ;; Pull a random function
 (define (random-function)
-  (vector-ref the-functions (random (vector-length the-functions))))
+  (define exp-var (randomp 2 max-exp))
+  (λ (z c) (+ c (expt z exp-var))))
 
 ;; Define a random complex function (yes I compressed it on purpose)
 (define (random-complex)
@@ -64,7 +55,7 @@
 ;; Choose random values to use for the coloring function
 (define (pick-numbers)
   (define lefty  (randomp 1 32))
-  (define righty (randomp 1 (- 32 lefty)))
+  (define righty (abs (add1 (randomp 1 (- 32 lefty)))))
   (values lefty righty))
 
 ;; Create a color factory that has different modulos every creation
@@ -108,7 +99,7 @@
   (displayln "Creating fractal...")
   (random-fractal)
   (when
-    (< 15000 (file-size file-output-path))
+    (< 12000 (file-size file-output-path))
     (displayln "Fractal generated too small")
     (displayln "Remaking fractal...")
     (main))
