@@ -25,20 +25,12 @@ For the time being, the image will just be generated at a minimal
 magnification level, since there is a good chance we can create a fractal that 
 has no numbers in it's set (or at least in the domain we pick).
 
-# Future Improvements
+# Goals
 
-Most of Racket's processing time will be doing unboxed computations, so 
-the next obvious improvement would be to make it use flonum computations 
-to perform boxed operations instead.
-
-Another feature is to check if an image contains *any* picture data at all. 
-Naturally I can compare file sizes to see if it's completely empty (it would 
-be just all black pixels), or I can create a step-by-step pixel check to see if 
-it's empty.
-
-One thing I want to do is Fourier Transforming the last-generated image to show 
-frequency distributions of each generated image. This could probably be done 
-quickly with NumPy/OpenCV instead of writing it all in Racket.
+* Improve performance by doing flonum operations throughout the computation loop
+* Buy a better Raspberry Pi for a Racket performance increase
+* Implement some kind of learning to improve randomization process
+* Process Fourier Transforms of each image and upload it alongside
 
 # Setup Instructions
 
