@@ -56,3 +56,14 @@ Windows users might run into problems that Racket cannot call the Python script
 due to binary location errors (ie: Racket can't call the Twitter script as a 
 program because Windows doesn't know how to handle non-executable files). This is 
 meant more as a server program than something you can run on Windows.
+
+# Requirements
+
+The requirements for this is roughly as follows:
+
+* Python 2.7.9
+* Racket 6.1
+* Tweepy 3.5
+* Virtualenv (if you don't have sudo access)
+
+Additional Python dependencies are listed in requirements.txt.

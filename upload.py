@@ -38,11 +38,10 @@ def main(*args, **kwargs):
     unuploaded = True
     while unuploaded:
         try:
-            print("Uploading to Twitter...")
             api = create_api(read_keys())
             api.update_with_media("output.png")
             unuploaded = False
-            print("Done.")
+            print("Successfully uploaded!")
         except Exception as e:
             print("Error: {}".format(e))
 

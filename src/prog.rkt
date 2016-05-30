@@ -17,21 +17,28 @@
 (define x-offset 2.25)
 (define y-offset 1.25)
 (define sleep-time 1800) ; sleep for an hour
-(define max-iter 255)
-(define rand-scale 1)
-(define max-exp 10)
+(define max-iter 300)
+(define rand-scale 1.0)
 
 (define file-output-path "output.png")
 
 (define the-functions 
   (vector		
+    (λ (z c) (+ c (expt z 0.5)))
     (λ (z c) (+ c (expt z 2)))		
     (λ (z c) (+ c (expt z 3)))		
+    (λ (z c) (+ c z (expt z 2)))
     (λ (z c) (+ c (exp z)))		
     (λ (z c) (+ c (exp (expt z 2))))		
-    (λ (z c) (+ c (exp (expt z 3))))		
-    (λ (z c) (+ c (* (expt z 2) (exp z))))		
-    (λ (z c) (+ c (sin z)))))
+    (λ (z c) (+ c (exp (expt z 3))))
+    (λ (z c) (+ c (exp (expt z 4))))
+    (λ (z c) (+ c (exp (expt z 5))))
+    (λ (z c) (+ c (exp (expt z 6))))
+    (λ (z c) (+ c (exp (expt z 7))))
+    (λ (z c) (+ c (* (expt z 2) (exp z))))
+    (λ (z c) (+ c (sin (expt z 2))))
+    (λ (z c) (+ c (tan (expt z 2))))
+    ))
 
 ;; Pull a random function
 (define (random-function)
@@ -107,6 +114,10 @@
 (define (main)
   (displayln "Creating fractal...")
   (time (random-fractal))
+  (when
+    (4000 . > .  (file-size "output.png"))
+    (displayln "Failed size check, restarting...")
+    (main))
   (displayln "Uploading...")
   (system* "upload.py")
   (displayln "Sleeping... ( -ل͟-) Zzzzzzz")
