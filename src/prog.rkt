@@ -4,7 +4,11 @@
 (require racket/draw)
 
 (provide 
+  the-functions
+  random-function
+  random-complex
   randomp
+  iterate
   make-fractal
   random-fractal
   main)
