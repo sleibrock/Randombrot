@@ -26,19 +26,20 @@
     "test-make-fractal"
     (file-exists? (string->path "output.png"))))
 
-(define (test-multiple-fractals)
-  (for-each
-    (λ (p) (time (make-fractal (first p) 0 1024 576 (second p))))
-    (list
-      (list (λ (z c) (+ c (expt z 2)))       "z-squared.png")
-      (list (λ (z c) (+ c (exp z)))          "exp-z.png")
-      (list (λ (z c) (+ c (exp (expt z 2)))) "exp-z-squared.png")
-      (list (λ (z c) (+ c (exp (sin z))))    "exp-sin-z.png")))
-  (list "test-multiple-fractals" #t))
+(define (test-each-equation)
+  (define (itest lst c)
+    (if (empty? lst)
+      #t
+      (begin
+        (time (make-fractal (car lst) 0 1024 576
+                            (string-append (number->string c) ".png")))
+        (itest (cdr lst) (add1 c)))))
+  (itest (vector->list the-functions) 0)
+  (list "test-each-equation" #t))
 
 (test-manager
   (list
     test-randomp
     test-random-fractal
-    test-multiple-fractals))
+    test-each-equation))
 
