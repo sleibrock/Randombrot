@@ -20,7 +20,7 @@
 (define y-scale  (/ 2.5 magnification))
 (define x-offset 2.25)
 (define y-offset 1.25)
-(define sleep-time 1800) ; sleep for an hour
+(define sleep-time 1800) ; sleep for half an hour
 (define max-iter 300)
 (define rand-scale 1.0)
 
@@ -28,7 +28,6 @@
 
 (define the-functions 
   (vector		
-    (λ (z c) (+ c (expt z 0.5)))
     (λ (z c) (+ c (expt z 2)))		
     (λ (z c) (+ c (expt z 3)))		
     (λ (z c) (+ c z (expt z 2)))
@@ -44,9 +43,11 @@
     (λ (z c) (+ c (tan (expt z 2))))
     ))
 
-;; Pull a random function
+;; Pull a random function from the list; 5% chance of a randomly composed one
 (define (random-function)
-  (vector-ref the-functions (random (vector-length the-functions))))
+  (if (> 0.05 (random))
+    (compose (random-function) (random-function))
+    (vector-ref the-functions (random (vector-length the-functions)))))
 
 ;; Random range function for older Racket versions
 (define (randomp low high)
