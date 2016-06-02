@@ -46,7 +46,10 @@
 ;; Pull a random function from the list; 5% chance of a randomly composed one
 (define (random-function)
   (if (> 0.05 (random))
-    (compose (random-function) (random-function))
+    (λ (z c)
+       (define left  (random-function))
+       (define right (random-function))
+       (* (left z c) (right z c)))
     (vector-ref the-functions (random (vector-length the-functions)))))
 
 ;; Random range function for older Racket versions
