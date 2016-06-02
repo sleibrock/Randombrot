@@ -31,7 +31,7 @@
     (if (empty? lst)
       #t
       (begin
-        (time (make-fractal (car lst) 0 1024 576
+        (time (make-fractal (car lst) 0 400 400
                             (string-append (number->string c) ".png")))
         (itest (cdr lst) (add1 c)))))
   (itest (vector->list the-functions) 0)
