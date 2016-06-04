@@ -23,7 +23,7 @@
 (define (test-random-fractal)
   (time (random-fractal))
   (list
-    "test-make-fractal"
+    "test-random-fractal"
     (file-exists? (string->path "output.png"))))
 
 (define (test-each-equation)

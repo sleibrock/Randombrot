@@ -31,6 +31,7 @@ has no numbers in it's set (or at least in the domain we pick).
 * Buy a better Raspberry Pi for a Racket performance increase
 * Implement some kind of learning to improve randomization process
 * Process Fourier Transforms of each image and upload it alongside
+* Render 3D maps (if possible by the hardware) of Julia sets
 
 # Setup Instructions
 

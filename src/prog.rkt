@@ -20,12 +20,14 @@
 (define y-scale  (/ 2.5 magnification))
 (define x-offset 2.25)
 (define y-offset 1.25)
-(define sleep-time 1800) ; sleep for half an hour
+(define sleep-time 3600) ; sleep for half an hour
 (define max-iter 300)
 (define rand-scale 1.0)
 
+;; target output path; change this, edit upload.py as well
 (define file-output-path "output.png")
 
+;; Core functions to render Mandelbrot sets
 (define the-functions 
   (vector		
     (λ (z c) (+ c (expt z 2)))		
@@ -43,9 +45,9 @@
     (λ (z c) (+ c (log (expt z 2))))
     ))
 
-;; Pull a random function from the list; 5% chance of a randomly composed one
+;; Pull a random function from the list; 10% chance of a randomly composed one
 (define (random-function)
-  (if (> 0.05 (random))
+  (if (> 0.1 (random))
     (λ (z c)
        (define left  (random-function))
        (define right (random-function))
@@ -95,6 +97,7 @@
          (* b1 (modulo i b2))
          (* c1 (modulo i c2))))))
 
+;; iterate through each pixel and generate a Mandelbrot set image
 (define (make-fractal fun cvar wid hei fpath)
   (define target (make-bitmap wid hei))
   (define dc (new bitmap-dc% [bitmap target]))
@@ -109,7 +112,7 @@
     (send dc draw-point x y))
   (send target save-file fpath 'png))
 
-;; No-args fractal wrapper
+;; No-args fractal wrapper for the main function
 (define (random-fractal)
   (make-fractal
     (random-function)
