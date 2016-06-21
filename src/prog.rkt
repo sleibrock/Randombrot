@@ -13,16 +13,16 @@
   random-fractal
   main)
 
-(define target-width  1024) ; 1080p gets resized to 1024x576 
+(define target-width   1024) ; 1080p gets resized to 1024x576 
 (define target-height  576)
 (define magnification  1.0)
-(define x-scale  (/ 3.0 magnification))
-(define y-scale  (/ 2.5 magnification))
-(define x-offset 2.25)
-(define y-offset 1.25)
-(define sleep-time 3600) ; sleep for half an hour
-(define max-iter 300)
-(define rand-scale 1.0)
+(define x-scale        (/ 3.0 magnification))
+(define y-scale        (/ 2.5 magnification))
+(define x-offset       2.25)
+(define y-offset       1.25)
+(define sleep-time     3600) ; sleep for half an hour
+(define max-iter       300)
+(define rand-scale     3.0)
 
 ;; target output path; change this, edit upload.py as well
 (define file-output-path "output.png")
@@ -33,6 +33,7 @@
     (λ (z c) (+ c (expt z 2)))		
     (λ (z c) (+ c (expt z 3)))		
     (λ (z c) (+ c z (expt z 2)))
+    (λ (z c) (+ c (expt z (randomp 2 10)))) ;; a randomized exponentiation
     (λ (z c) (+ c (exp (expt z 0.5))))		
     (λ (z c) (+ c (exp (expt z 2))))		
     (λ (z c) (+ c (exp (expt z 3))))
@@ -45,9 +46,9 @@
     (λ (z c) (+ c (log (expt z 2))))
     ))
 
-;; Pull a random function from the list; 10% chance of a randomly composed one
+;; Pull a random function from the list; 50% chance of a randomly composed one
 (define (random-function)
-  (if (> 0.1 (random))
+  (if (> 0.5 (random))
     (λ (z c)
        (define left  (random-function))
        (define right (random-function))
@@ -71,7 +72,7 @@
     (map (λ (w) (if (< w 0) 0 (if (> w 255) 255 w)))
          (list a b c))))
 
-;; Process a function until it diverges or reaches maximum iteration (255)
+;; Process a function until it diverges or reaches max-iter
 (define (iterate f z c i)
   (define zp (f z c))
   (if (or (= i max-iter) (> (magnitude zp) 2))
@@ -79,6 +80,7 @@
     (iterate f zp c (add1 i))))
 
 ;; Choose random values to use for the coloring function
+;; TODO: create a better algorithm for picking color seeds
 (define (pick-numbers)
   (define lefty  (randomp 1 32))
   (define righty (abs (add1 (randomp 1 (- 32 lefty)))))
@@ -123,13 +125,13 @@
 
 ; Create a fractal, upload it by calling the upload function, sleep for 1 hour
 (define (main)
-  (displayln "Creating fractal...")
+  (displayln "Creating fractal... (ง’̀-‘́)ง")
   (time (random-fractal))
   (when
     (4000 . > .  (file-size "output.png"))
-    (displayln "Failed size check, restarting...")
+    (displayln "Failed size check, restarting... ლ(ಠ益ಠლ)")
     (main))
-  (displayln "Uploading...")
+  (displayln "Uploading... (つ☯ᗜ☯)つ")
   (system* "upload.py")
   (displayln "Sleeping... ( -ل͟-) Zzzzzzz")
   (sleep sleep-time)

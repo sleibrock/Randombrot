@@ -1,6 +1,6 @@
 # Randombrot Project
 
-This is a Twitter bot that generates randomly created Mandelbrot fractals. 
+This is a Twitter bot that generates randomly created Julia set fractals. 
 The program will create an image, upload it to a Twitter account, 
 and then sleep for an hour, creating at least 24 fractals a day (more or 
 less depending on the complexity of the given random function and it's variables, 
@@ -8,7 +8,7 @@ since this will be running on a Raspberry Pi which has a low GHz ARM processor).
 
 # Toolkit
 
-The Mandelbrot program is written in Racket. The Twitter upload is written in 
+The Julia program is written in Racket. The Twitter upload is written in 
 Python. Since Racket doesn't have a standard OAuth 1.0 library, it's easier to 
 use Python to do a very minimal action and call it from within Racket. 
 Until Racket gets an OAuth 1.0 default implementation (which it probably won't), 
@@ -17,13 +17,18 @@ the upload will just be done with Python.
 # Mandelbrot Set Definition
 
 A Mandelbrot set is a set of complex numbers _c_ for which the function 
-f(z) = z^2 + c does not diverge. To make things more variable, we will pick 
-random functions from a pre-defined list of functions and choose a random 
-seed for _c_ to act as a base.
+f(z) = z^2 + c does not diverge. To make things more interesting, we are
+going to create Julia set fractals, which Mandelbrot is a member of. Julia fractals
+are any given function with the same divergence rules. 
 
 For the time being, the image will just be generated at a minimal 
 magnification level, since there is a good chance we can create a fractal that 
 has no numbers in it's set (or at least in the domain we pick).
+
+There is a pre-defined list of functions that the program will choose from.
+In recent versions, there is now a mechanic where the program will have a chance of
+composing functions from the pre-defined list of functions, creating sets that may
+or may not even have any numbers in them at all.
 
 # Goals
 
@@ -45,7 +50,7 @@ To run this service you need Racket, Python, and Python Pip.
 6. Run "make setup" to install the Python dependencies (might require sudo)
 7. Run "make run" to start program
 
-A keys.txt is required, and requires each token from the Twitter app in it, totalling four lines.
+A _keys.txt_ is required, and requires each token from the Twitter app in it, totalling four lines.
 Tokens should appear in this order:
 
 * Consumer key
