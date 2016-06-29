@@ -162,7 +162,7 @@
 
   ;; upload block 
   (displayln "Uploading... (つ☯ᗜ☯)つ")
-  (system* "upload.py" (string-append (first func) "; c=" randc))
+  (system* "upload.py" (string-append (first func)) "; c=" randc)
   (displayln "Sleeping... ( -ل͟-) Zzzzzzz")
 
   ;; wait and go-again block
