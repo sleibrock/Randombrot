@@ -35,7 +35,6 @@
    (list "z^2+c"        (λ (z c) (+ c (expt z 2))))
    (list "z^3+c"        (λ (z c) (+ c (expt z 3))))
    (list "z^2+z+c"      (λ (z c) (+ c z (expt z 2))))
-   (list "z^p+c"        (λ (z c) (+ c (expt z (randomp 2 10)))))
    (list "z^0.5+c"      (λ (z c) (+ c (exp (expt z 0.5)))))
    (list "exp(z^2)+c"   (λ (z c) (+ c (exp (expt z 2)))))
    (list "exp(z^3)+c"   (λ (z c) (+ c (exp (expt z 3)))))
