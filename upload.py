@@ -44,7 +44,7 @@ def main(*args, **kwargs):
     while unuploaded:
         try:
             api = create_api(read_keys())
-            api.update_with_media("output.png")
+            api.update_with_media("output.png", status)
             unuploaded = False
             print("Successfully uploaded!")
         except Exception as e:
