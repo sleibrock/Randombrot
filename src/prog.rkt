@@ -4,66 +4,86 @@
 (require racket/draw)
 
 (provide 
-  the-functions
-  random-function
-  random-complex
-  randomp
-  iterate
-  make-fractal
-  random-fractal
-  main)
+ the-functions
+ the-ops
+ random-function
+ random-complex
+ randomp
+ iterate
+ make-fractal
+ random-fractal
+ main)
 
-(define target-width   1024) ; 1080p gets resized to 1024x576 
+(define target-width   1024) ;; Twitter dimensions are 1024x576 
 (define target-height  576)
-(define magnification  1.0)
-(define x-scale        (/ 3.0 magnification))
+(define magnification  1.0)  ;; depth level
+(define x-scale        (/ 3.0 magnification)) ;; aspect ratio
 (define y-scale        (/ 2.5 magnification))
-(define x-offset       2.25)
+(define x-offset       2.25) ;; offsetting the grid of the fractal
 (define y-offset       1.25)
-(define sleep-time     3600) ; sleep for half an hour
-(define max-iter       300)
-(define rand-scale     3.0)
+(define sleep-time     3600) ;; sleep for an hour
+(define max-iter       250)  ;; max iteration depth
+(define rand-scale     3.0)  ;; random complex scaling
 
-;; target output path; change this, edit upload.py as well
+;; target output path; if changing this, edit upload.py as well
 (define file-output-path "output.png")
 
 ;; Core functions to render Mandelbrot sets
 (define the-functions 
-  (vector		
-    (λ (z c) (+ c (expt z 2)))		
-    (λ (z c) (+ c (expt z 3)))		
-    (λ (z c) (+ c z (expt z 2)))
-    (λ (z c) (+ c (expt z (randomp 2 10)))) ;; a randomized exponentiation
-    (λ (z c) (+ c (exp (expt z 0.5))))		
-    (λ (z c) (+ c (exp (expt z 2))))		
-    (λ (z c) (+ c (exp (expt z 3))))
-    (λ (z c) (+ c (* (expt z 2) (exp z))))
-    (λ (z c) (+ c (sin (expt z 2))))
-    (λ (z c) (+ c (tan (expt z 2))))
-    (λ (z c) (+ c (sinh (expt z 2))))
-    (λ (z c) (+ c (tanh (expt z 20))))
-    (λ (z c) (+ c (exp (expt z -2.0))))
-    (λ (z c) (+ c (log (expt z 2))))
-    ))
+  (vector
+   (list "z+c"          (λ (z c) (+ c z)))
+   (list "z^2+c"        (λ (z c) (+ c (expt z 2))))
+   (list "z^3+c"        (λ (z c) (+ c (expt z 3))))
+   (list "z^2+z+c"      (λ (z c) (+ c z (expt z 2))))
+   (list "z^p+c"        (λ (z c) (+ c (expt z (randomp 2 10)))))
+   (list "z^0.5+c"      (λ (z c) (+ c (exp (expt z 0.5)))))
+   (list "exp(z^2)+c"   (λ (z c) (+ c (exp (expt z 2)))))
+   (list "exp(z^3)+c"   (λ (z c) (+ c (exp (expt z 3)))))
+   (list "z^2*exp(z)+c" (λ (z c) (+ c (* (expt z 2) (exp z)))))
+   (list "sin(z^2)+c"   (λ (z c) (+ c (sin (expt z 2)))))
+   (list "cos(z^2)+c"   (λ (z c) (+ c (cos (expt z 2)))))
+   (list "tan(z^2)+c"   (λ (z c) (+ c (tan (expt z 2)))))
+   (list "sinh(z^2)+c"  (λ (z c) (+ c (sinh (expt z 2)))))
+   (list "cosh(z^2)+c"  (λ (z c) (+ c (cosh (expt z 2)))))
+   (list "tanh(z^2)+c"  (λ (z c) (+ c (tanh (expt z 2)))))
+   (list "asin(z^2)+c"  (λ (z c) (+ c (asin (expt z 2)))))
+   (list "acos(z^2)+c"  (λ (z c) (+ c (acos (expt z 2)))))
+   (list "atan(z^2)+c"  (λ (z c) (+ c (atan (expt z 2)))))
+   (list "exp(z^0.5)+c" (λ (z c) (+ c (exp (expt z -2.0)))))
+   (list "log(z^2)+c"   (λ (z c) (+ c (log (expt z 2)))))
+   ))
 
-;; Pull a random function from the list; 50% chance of a randomly composed one
-(define (random-function)
-  (if (> 0.5 (random))
-    (λ (z c)
-       (define left  (random-function))
-       (define right (random-function))
-       (* (left z c) (right z c)))
-    (vector-ref the-functions (random (vector-length the-functions)))))
+;; the operations to use to weave functions together
+(define the-ops
+  (vector
+   (list "+" +)
+   (list "-" -)
+   (list "/" /)
+   (list "*" *)))
 
 ;; Random range function for older Racket versions
 (define (randomp low high)
   (inexact->exact (round (+ low (* (random) (- high low))))))
 
+;; Get a random element from a vector (we're using this a lot)
+(define (get-random-element vec)
+  (vector-ref vec (random (vector-length vec))))
+
+;; create a new function with a random op inbetween
+;; aimed to replace the random-chance recursion factory
+(define (random-function)
+  (define left  (get-random-element the-functions))
+  (define right (get-random-element the-functions))
+  (define op    (get-random-element the-ops))
+  (list
+   (string-join(list "f(x) =" (first left) (first op) (first right)) " ")
+   (λ (z c) ((second op) ((second left) z c) ((second right) z c)))))
+
 ;; Define a random complex function (yes I compressed it on purpose)
 (define (random-complex)
   (apply make-rectangular
          (map (λ (p) (if (= 0 (random 2)) p (- p)))
-              (map (λ (j) (* rand-scale (random))) (range 2))))) 
+              (map (λ (j) (* rand-scale (random))) (range 2)))))
 
 ;; A color creation wrapper to constrain 0 <= x <= 255 on all nums given
 (define (create-color a b c)
@@ -115,25 +135,38 @@
   (send target save-file fpath 'png))
 
 ;; No-args fractal wrapper for the main function
-(define (random-fractal)
+(define (random-fractal rand-fun randc)
   (make-fractal
-    (random-function)
-    (random-complex)
+    rand-fun
+    randc
     target-width
     target-height
     file-output-path))
 
-; Create a fractal, upload it by calling the upload function, sleep for 1 hour
+;; Main procedure to create and upload fractals
 (define (main)
+  ;; Genesis block 
+  (displayln "Picking a function... ")
+  (define func (random-function)) ;; this is a pair (string . proc)
+  (displayln (format "Got ~a" (first func)))
+  (displayln "Generating a random number... ")
+  (define randc (random-complex))
+  (displayln (format "Got ~a" randc))
   (displayln "Creating fractal... (ง’̀-‘́)ง")
-  (time (random-fractal))
+  (time (random-fractal (second func) randc))
+  
+  ;; emergency break-out block
   (when
     (4000 . > .  (file-size "output.png"))
     (displayln "Failed size check, restarting... ლ(ಠ益ಠლ)")
     (main))
+
+  ;; upload block 
   (displayln "Uploading... (つ☯ᗜ☯)つ")
-  (system* "upload.py")
+  (system* "upload.py" (string-append (first func) "; c=" randc))
   (displayln "Sleeping... ( -ل͟-) Zzzzzzz")
+
+  ;; wait and go-again block
   (sleep sleep-time)
   (main))
-
+;; end

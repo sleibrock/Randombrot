@@ -12,6 +12,7 @@
          (displayln (format "~a didn't pass" (first p)))))
     (foldl (λ (a b) (cons (a) b)) '() listof-tests)))
 
+;; Test if randomp is generating numbers within 0 < x < 1000
 (define (test-randomp)
   (list 
     "test-randomp"
@@ -21,7 +22,7 @@
         (map (λ (p) (randomp 1 1000)) (range 1000))))))
 
 (define (test-random-fractal)
-  (time (random-fractal))
+  (time (random-fractal (second (random-function)) (random-complex)))
   (list
     "test-random-fractal"
     (file-exists? (string->path "output.png"))))
@@ -31,7 +32,7 @@
     (if (empty? lst)
       #t
       (begin
-        (time (make-fractal (car lst) 0 400 400
+        (time (make-fractal (second (car lst)) 0.1 400 400
                             (string-append (number->string c) ".png")))
         (itest (cdr lst) (add1 c)))))
   (itest (vector->list the-functions) 0)

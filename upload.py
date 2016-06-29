@@ -7,6 +7,7 @@ Reads a file for keys to use with OAuth
 Uploads a file in the current directory
 """
 import tweepy
+from sys import argv
 
 def read_keys(fname="keys.txt"):
     """
@@ -35,6 +36,10 @@ def main(*args, **kwargs):
     """
     Upload a file to a Twitter account
     """
+    argv.pop(0)
+    status = str()
+    if argv:
+        status = argv.pop()
     unuploaded = True
     while unuploaded:
         try:
