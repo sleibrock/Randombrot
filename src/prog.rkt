@@ -76,7 +76,7 @@
   (define right (get-random-element the-functions))
   (define op    (get-random-element the-ops))
   (list
-   (string-join(list "f(x) =" (first left) (first op) (first right)) " ")
+   (string-join(list "f(z) =" (first left) (first op) (first right)) " ")
    (λ (z c) ((second op) ((second left) z c) ((second right) z c)))))
 
 ;; Define a random complex function (yes I compressed it on purpose)

@@ -72,4 +72,4 @@ The requirements for this is roughly as follows:
 * Tweepy 3.5
 * Virtualenv (if you don't have sudo access)
 
-Additional Python dependencies are listed in requirements.txt.
+Additional Python dependencies are listed in _requirements.txt_.
