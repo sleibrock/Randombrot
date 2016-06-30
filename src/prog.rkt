@@ -29,12 +29,20 @@
 (define file-output-path "output.png")
 
 ;; Core functions to render Mandelbrot sets
+;; TODO: modify these to be structs instead of lists soon
 (define the-functions 
   (vector
    (list "z+c"          (λ (z c) (+ c z)))
+   (list "z^0.5+c"      (λ (z c) (+ c (expt z 0.5))))
    (list "z^2+c"        (λ (z c) (+ c (expt z 2))))
    (list "z^3+c"        (λ (z c) (+ c (expt z 3))))
+   (list "z^4+c"        (λ (z c) (+ c (expt z 4))))
+   (list "z^5+c"        (λ (z c) (+ c (expt z 5))))
+   (list "z^6+c"        (λ (z c) (+ c (expt z 6))))
+   (list "z^7+c"        (λ (z c) (+ c (expt z 7))))
+   (list "z^8+c"        (λ (z c) (+ c (expt z 8))))
    (list "z^2+z+c"      (λ (z c) (+ c z (expt z 2))))
+   (list "z^3+z+c"      (λ (z c) (+ c z (expt z 3))))
    (list "z^0.5+c"      (λ (z c) (+ c (exp (expt z 0.5)))))
    (list "exp(z^2)+c"   (λ (z c) (+ c (exp (expt z 2)))))
    (list "exp(z^3)+c"   (λ (z c) (+ c (exp (expt z 3)))))
