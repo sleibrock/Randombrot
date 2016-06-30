@@ -172,12 +172,12 @@
   ;; Genesis block 
   (displayln "Picking a function... ")
   (define func (random-function)) ;; this is a pair (string . proc)
-  (displayln (format "Got ~a" (first func)))
+  (displayln (format "Got ~a" (pstr func)))
   (displayln "Generating a random number... ")
   (define randc (random-complex))
   (displayln (format "Got ~a" randc))
   (displayln "Creating fractal... (ง’̀-‘́)ง")
-  (time (random-fractal (second func) randc))
+  (time (random-fractal (pfun func) randc))
   
   ;; emergency break-out block
   (when
