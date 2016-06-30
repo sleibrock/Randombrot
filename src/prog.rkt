@@ -12,7 +12,10 @@
  iterate
  make-fractal
  random-fractal
- main)
+ main
+ pfun
+ pstr
+ (struct-out proc))
 
 (define target-width   1024) ;; Twitter dimensions are 1024x576 
 (define target-height  576)
@@ -28,45 +31,50 @@
 ;; target output path; if changing this, edit upload.py as well
 (define file-output-path "output.png")
 
+;; The core struct we will use throughtout the program
+(struct proc (str fun))
+(define pfun (lambda (p) (proc-fun p)))
+(define pstr (lambda (p) (proc-str p)))
+
 ;; Core functions to render Mandelbrot sets
 ;; TODO: modify these to be structs instead of lists soon
 (define the-functions 
   (vector
-   (list "z+c"          (λ (z c) (+ c z)))
-   (list "z^0.5+c"      (λ (z c) (+ c (expt z 0.5))))
-   (list "z^2+c"        (λ (z c) (+ c (expt z 2))))
-   (list "z^3+c"        (λ (z c) (+ c (expt z 3))))
-   (list "z^4+c"        (λ (z c) (+ c (expt z 4))))
-   (list "z^5+c"        (λ (z c) (+ c (expt z 5))))
-   (list "z^6+c"        (λ (z c) (+ c (expt z 6))))
-   (list "z^7+c"        (λ (z c) (+ c (expt z 7))))
-   (list "z^8+c"        (λ (z c) (+ c (expt z 8))))
-   (list "z^2+z+c"      (λ (z c) (+ c z (expt z 2))))
-   (list "z^3+z+c"      (λ (z c) (+ c z (expt z 3))))
-   (list "z^0.5+c"      (λ (z c) (+ c (exp (expt z 0.5)))))
-   (list "exp(z^2)+c"   (λ (z c) (+ c (exp (expt z 2)))))
-   (list "exp(z^3)+c"   (λ (z c) (+ c (exp (expt z 3)))))
-   (list "z^2*exp(z)+c" (λ (z c) (+ c (* (expt z 2) (exp z)))))
-   (list "sin(z^2)+c"   (λ (z c) (+ c (sin (expt z 2)))))
-   (list "cos(z^2)+c"   (λ (z c) (+ c (cos (expt z 2)))))
-   (list "tan(z^2)+c"   (λ (z c) (+ c (tan (expt z 2)))))
-   (list "sinh(z^2)+c"  (λ (z c) (+ c (sinh (expt z 2)))))
-   (list "cosh(z^2)+c"  (λ (z c) (+ c (cosh (expt z 2)))))
-   (list "tanh(z^2)+c"  (λ (z c) (+ c (tanh (expt z 2)))))
-   (list "asin(z^2)+c"  (λ (z c) (+ c (asin (expt z 2)))))
-   (list "acos(z^2)+c"  (λ (z c) (+ c (acos (expt z 2)))))
-   (list "atan(z^2)+c"  (λ (z c) (+ c (atan (expt z 2)))))
-   (list "exp(z^0.5)+c" (λ (z c) (+ c (exp (expt z -2.0)))))
-   (list "log(z^2)+c"   (λ (z c) (+ c (log (expt z 2)))))
+   (proc "z+c"          (λ (z c) (+ c z)))
+   (proc "z^0.5+c"      (λ (z c) (+ c (expt z 0.5))))
+   (proc "z^2+c"        (λ (z c) (+ c (expt z 2))))
+   (proc "z^3+c"        (λ (z c) (+ c (expt z 3))))
+   (proc "z^4+c"        (λ (z c) (+ c (expt z 4))))
+   (proc "z^5+c"        (λ (z c) (+ c (expt z 5))))
+   (proc "z^6+c"        (λ (z c) (+ c (expt z 6))))
+   (proc "z^7+c"        (λ (z c) (+ c (expt z 7))))
+   (proc "z^8+c"        (λ (z c) (+ c (expt z 8))))
+   (proc "z^2+z+c"      (λ (z c) (+ c z (expt z 2))))
+   (proc "z^3+z+c"      (λ (z c) (+ c z (expt z 3))))
+   (proc "z^0.5+c"      (λ (z c) (+ c (exp (expt z 0.5)))))
+   (proc "exp(z^2)+c"   (λ (z c) (+ c (exp (expt z 2)))))
+   (proc "exp(z^3)+c"   (λ (z c) (+ c (exp (expt z 3)))))
+   (proc "z^2*exp(z)+c" (λ (z c) (+ c (* (expt z 2) (exp z)))))
+   (proc "sin(z^2)+c"   (λ (z c) (+ c (sin (expt z 2)))))
+   (proc "cos(z^2)+c"   (λ (z c) (+ c (cos (expt z 2)))))
+   (proc "tan(z^2)+c"   (λ (z c) (+ c (tan (expt z 2)))))
+   (proc "sinh(z^2)+c"  (λ (z c) (+ c (sinh (expt z 2)))))
+   (proc "cosh(z^2)+c"  (λ (z c) (+ c (cosh (expt z 2)))))
+   (proc "tanh(z^2)+c"  (λ (z c) (+ c (tanh (expt z 2)))))
+   (proc "asin(z^2)+c"  (λ (z c) (+ c (asin (expt z 2)))))
+   (proc "acos(z^2)+c"  (λ (z c) (+ c (acos (expt z 2)))))
+   (proc "atan(z^2)+c"  (λ (z c) (+ c (atan (expt z 2)))))
+   (proc "exp(z^0.5)+c" (λ (z c) (+ c (exp (expt z -2.0)))))
+   (proc "log(z^2)+c"   (λ (z c) (+ c (log (expt z 2)))))
    ))
 
 ;; the operations to use to weave functions together
 (define the-ops
   (vector
-   (list "+" +)
-   (list "-" -)
-   (list "/" /)
-   (list "*" *)))
+   (proc "+" +)
+   (proc "-" -)
+   (proc "/" /)
+   (proc "*" *)))
 
 ;; Random range function for older Racket versions
 (define (randomp low high)
@@ -82,9 +90,18 @@
   (define left  (get-random-element the-functions))
   (define right (get-random-element the-functions))
   (define op    (get-random-element the-ops))
-  (list
-   (string-join(list "f(z) =" (first left) (first op) (first right)) " ")
-   (λ (z c) ((second op) ((second left) z c) ((second right) z c)))))
+  (define lmul  (- 0.5 (* 2 (random))))
+  (define rmul  (- 0.5 (* 2 (random))))
+  (proc
+   (string-join
+    (list
+     "f(z) ="
+     (string-append (number->string lmul) "*(" (pstr left) ")")
+     (pstr op)
+     (string-append (number->string rmul) "*(" (pstr right) ")")
+     )
+    " ")
+   (λ (z c) ((pfun op) (* lmul ((pfun left) z c)) (* rmul ((pfun right) z c))))))
 
 ;; Define a random complex function (yes I compressed it on purpose)
 (define (random-complex)
@@ -170,7 +187,7 @@
 
   ;; upload block 
   (displayln "Uploading... (つ☯ᗜ☯)つ")
-  (system* "upload.py" (string-append (first func) "; c=" (number->string randc)))
+  (system* "upload.py" (string-append (pstr func) "\n\n c=" (number->string randc)))
   (displayln "Sleeping... ( -ل͟-) Zzzzzzz")
 
   ;; wait and go-again block

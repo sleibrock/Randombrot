@@ -22,7 +22,7 @@
         (map (λ (p) (randomp 1 1000)) (range 1000))))))
 
 (define (test-random-fractal)
-  (time (random-fractal (second (random-function)) (random-complex)))
+  (time (random-fractal (pfun (random-function)) (random-complex)))
   (list
     "test-random-fractal"
     (file-exists? (string->path "output.png"))))
@@ -32,7 +32,7 @@
     (if (empty? lst)
       #t
       (begin
-        (time (make-fractal (second (car lst)) 0.1 400 400
+        (time (make-fractal (pfun (car lst)) 0.1 400 400
                             (string-append (number->string c) ".png")))
         (itest (cdr lst) (add1 c)))))
   (itest (vector->list the-functions) 0)
