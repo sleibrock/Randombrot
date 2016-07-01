@@ -25,7 +25,8 @@
 (define y-offset       1.25)
 (define sleep-time     3600) ;; sleep for an hour
 (define max-iter       250)  ;; max iteration depth
-(define rand-scale     3.0)  ;; random complex scaling
+(define comp-scale     3.0)  ;; random complex scaling
+(define rand-scale     3.0)  ;; random amp scaling
 
 ;; target output path; if changing this, edit upload.py as well
 (define file-output-path "output.png")
@@ -36,7 +37,6 @@
 (define pstr (lambda (p) (proc-str p)))
 
 ;; Core functions to render Mandelbrot sets
-;; TODO: modify these to be structs instead of lists soon
 (define the-functions 
   (vector
    (proc "z+c"          (λ (z c) (+ c z)))
@@ -115,8 +115,8 @@
   (define left  (get-random-element the-functions))
   (define right (get-random-element the-functions))
   (define op    (get-random-element the-ops))
-  (define lmul  (- 0.5 (* 2 (random))))
-  (define rmul  (- 0.5 (* 2 (random))))
+  (define lmul  (- (* 2 (random)) 1))
+  (define rmul  (- (* 2 (random)) 1))
   (proc
    (string-join
     (list
@@ -132,7 +132,7 @@
 (define (random-complex)
   (apply make-rectangular
          (map (λ (p) (if (= 0 (random 2)) p (- p)))
-              (map (λ (j) (* rand-scale (random))) (range 2)))))
+              (map (λ (j) (* comp-scale (random))) (range 2)))))
 
 ;; A color creation wrapper to constrain 0 <= x <= 255 on all nums given
 (define (create-color a b c)
@@ -195,7 +195,7 @@
   (displayln "Creating fractal... (ง’̀-‘́)ง")
   (time (make-fractal (pfun func) randc target-width target-height file-output-path))
   
-  ;; emergency break-out block
+  ;; emergency break-out block; check if file is less than 4000 bytes
   (when
     (4000 . > .  (file-size "output.png"))
     (displayln "Failed size check, restarting... ლ(ಠ益ಠლ)")
