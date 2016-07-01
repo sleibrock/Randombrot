@@ -21,12 +21,7 @@
         (λ (x) (not (if (> x 1000) #f (if (< x 1) #f #t))))
         (map (λ (p) (randomp 1 1000)) (range 1000))))))
 
-(define (test-random-fractal)
-  (time (random-fractal (pfun (random-function)) (random-complex)))
-  (list
-    "test-random-fractal"
-    (file-exists? (string->path "output.png"))))
-
+;; Test each equation in the equation vector
 (define (test-each-equation)
   (define (itest lst c)
     (if (empty? lst)
@@ -41,6 +36,5 @@
 (test-manager
   (list
     test-randomp
-    test-random-fractal
     test-each-equation))
 
