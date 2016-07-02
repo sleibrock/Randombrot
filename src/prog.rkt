@@ -3,6 +3,9 @@
 ;; Required for bitmap drawing
 (require racket/draw)
 
+;; Data file for functions, structs and ops
+(require "data.rkt")
+
 (provide 
  the-functions
  the-ops
@@ -24,7 +27,7 @@
 (define x-offset       2.25) ;; offsetting the grid of the fractal
 (define y-offset       1.25)
 (define sleep-time     3600) ;; sleep for an hour
-(define max-iter       250)  ;; max iteration depth
+(define max-iter       255)  ;; max iteration depth
 (define comp-scale     3.0)  ;; random complex scaling
 (define rand-scale     3.0)  ;; random amp scaling
 (define size-limit    6000)  ;; image size minimum in bytes
@@ -34,76 +37,6 @@
 ;; target output path; if changing this, edit upload.py as well
 (define file-output-path "output.png")
 
-;; The core struct we will use throughtout the program
-(struct proc (str fun))
-(define pfun (lambda (p) (proc-fun p)))
-(define pstr (lambda (p) (proc-str p)))
-
-;; Core functions to render Mandelbrot sets
-(define the-functions 
-  (vector
-   (proc "z+c"          (λ (z c) (+ c z)))
-   (proc "z^0.5+c"      (λ (z c) (+ c (expt z 0.5))))
-   (proc "z^2+c"        (λ (z c) (+ c (expt z 2))))
-   (proc "z^3+c"        (λ (z c) (+ c (expt z 3))))
-   (proc "z^4+c"        (λ (z c) (+ c (expt z 4))))
-   (proc "z^5+c"        (λ (z c) (+ c (expt z 5))))
-   (proc "z^6+c"        (λ (z c) (+ c (expt z 6))))
-   (proc "z^7+c"        (λ (z c) (+ c (expt z 7))))
-   (proc "z^8+c"        (λ (z c) (+ c (expt z 8))))
-   (proc "z^2+z+c"      (λ (z c) (+ c z (expt z 2))))
-   (proc "z^3+z+c"      (λ (z c) (+ c z (expt z 3))))
-   (proc "z^0.5+c"      (λ (z c) (+ c (exp (expt z 0.5)))))
-   (proc "exp(z^2)+c"   (λ (z c) (+ c (exp (expt z 2)))))
-   (proc "exp(z^3)+c"   (λ (z c) (+ c (exp (expt z 3)))))
-   (proc "z^2*exp(z)+c" (λ (z c) (+ c (* (expt z 2) (exp z)))))
-   (proc "sin(z^2)+c"   (λ (z c) (+ c (sin (expt z 2)))))
-   (proc "cos(z^2)+c"   (λ (z c) (+ c (cos (expt z 2)))))
-   (proc "tan(z^2)+c"   (λ (z c) (+ c (tan (expt z 2)))))
-   (proc "sinh(z^2)+c"  (λ (z c) (+ c (sinh (expt z 2)))))
-   (proc "cosh(z^2)+c"  (λ (z c) (+ c (cosh (expt z 2)))))
-   (proc "tanh(z^2)+c"  (λ (z c) (+ c (tanh (expt z 2)))))
-   (proc "asin(z^2)+c"  (λ (z c) (+ c (asin (expt z 2)))))
-   (proc "acos(z^2)+c"  (λ (z c) (+ c (acos (expt z 2)))))
-   (proc "atan(z^2)+c"  (λ (z c) (+ c (atan (expt z 2)))))
-   (proc "exp(z^0.5)+c" (λ (z c) (+ c (exp (expt z -2.0)))))
-   (proc "log(z^2)+c"   (λ (z c) (+ c (log (expt z 2)))))
-   (proc "z-c"          (λ (z c) (- c z)))
-   (proc "z^0.5-c"      (λ (z c) (- c (expt z 0.5))))
-   (proc "z^2-c"        (λ (z c) (- c (expt z 2))))
-   (proc "z^3-c"        (λ (z c) (- c (expt z 3))))
-   (proc "z^4-c"        (λ (z c) (- c (expt z 4))))
-   (proc "z^5-c"        (λ (z c) (- c (expt z 5))))
-   (proc "z^6-c"        (λ (z c) (- c (expt z 6))))
-   (proc "z^7-c"        (λ (z c) (- c (expt z 7))))
-   (proc "z^8-c"        (λ (z c) (- c (expt z 8))))
-   (proc "z^2+z-c"      (λ (z c) (- c z (expt z 2))))
-   (proc "z^3+z-c"      (λ (z c) (- c z (expt z 3))))
-   (proc "z^0.5-c"      (λ (z c) (- c (exp (expt z 0.5)))))
-   (proc "exp(z^2)-c"   (λ (z c) (- c (exp (expt z 2)))))
-   (proc "exp(z^3)-c"   (λ (z c) (- c (exp (expt z 3)))))
-   (proc "z^2*exp(z)-c" (λ (z c) (- c (* (expt z 2) (exp z)))))
-   (proc "sin(z^2)-c"   (λ (z c) (- c (sin (expt z 2)))))
-   (proc "cos(z^2)-c"   (λ (z c) (- c (cos (expt z 2)))))
-   (proc "tan(z^2)-c"   (λ (z c) (- c (tan (expt z 2)))))
-   (proc "sinh(z^2)-c"  (λ (z c) (- c (sinh (expt z 2)))))
-   (proc "cosh(z^2)-c"  (λ (z c) (- c (cosh (expt z 2)))))
-   (proc "tanh(z^2)-c"  (λ (z c) (- c (tanh (expt z 2)))))
-   (proc "asin(z^2)-c"  (λ (z c) (- c (asin (expt z 2)))))
-   (proc "acos(z^2)-c"  (λ (z c) (- c (acos (expt z 2)))))
-   (proc "atan(z^2)-c"  (λ (z c) (- c (atan (expt z 2)))))
-   (proc "exp(z^0.5)-c" (λ (z c) (- c (exp (expt z -2.0)))))
-   (proc "log(z^2)-c"   (λ (z c) (- c (log (expt z 2)))))
-   ))
-
-;; the operations to use to weave functions together
-(define the-ops
-  (vector
-   (proc "+" +)
-   (proc "-" -)
-   (proc "/" (lambda (a b) (if (= b 0) 0 (/ a b))))
-   (proc "*" *)))
-
 ;; Random range function for older Racket versions
 (define (randomp low high)
   (inexact->exact (round (+ low (* (random) (- high low))))))
@@ -111,6 +44,15 @@
 ;; Get a random element from a vector (we're using this a lot)
 (define (get-random-element vec)
   (vector-ref vec (random (vector-length vec))))
+
+;; Transform a random-function's properties into a string for Twitter
+(define (get-func-string pop pleft pright lmul rmul)
+  (string-join
+   (map
+    (λ (lst)
+      (string-append (number->string (first lst)) "*(" (pstr (second lst)) ")"))
+    (list (list lmul pleft) (list rmul pright)))
+   (pstr pop)))
 
 ;; create a new function with a random op inbetween
 ;; aimed to replace the random-chance recursion factory
@@ -121,14 +63,7 @@
   (define lmul  (- (* 2 (random)) 1))
   (define rmul  (- (* 2 (random)) 1))
   (proc
-   (string-join
-    (list
-     "λ.z="
-     (string-append (number->string lmul) "*(" (pstr left) ")")
-     (pstr op)
-     (string-append (number->string rmul) "*(" (pstr right) ")")
-     )
-    " ")
+   (get-func-string op left right lmul rmul)
    (λ (z c) ((pfun op) (* lmul ((pfun left) z c)) (* rmul ((pfun right) z c))))))
 
 ;; Define a random complex function (yes I compressed it on purpose)
