@@ -2,12 +2,11 @@
 
 (require "src/prog.rkt")
 
-(define (create-file) (open-output-file "fractal.obj"))
 (define x-offset 2.25)
 (define y-offset 1.25)
 (define x-scale 3.0)
 (define y-scale 2.5)
-(define hs 50)
+(define hs 5)
 
 (define (make-3d fun wid hei fpath)
   (define op (open-output-file fpath #:exists 'replace))
@@ -18,9 +17,9 @@
     (displayln 
       (format 
         "v ~a ~a ~a" 
-        (- x (/ wid 2))
-        (- (* hs (/ (iterate fun 0 (make-rectangular real-x real-y) 0) 255.0)))
-        (- y (/ hei 2))) 
+        (- x (/ wid 2)) ;; x property
+        (+ (* hs (/ (iterate fun 0 (make-rectangular real-x real-y) 0) 255.0)))
+        (- y (/ hei 2))) ;; y property
       op))
   (for ([p sample-size]) ; connect the dots with a simple round-the-world
     (when

@@ -27,6 +27,9 @@
 (define max-iter       250)  ;; max iteration depth
 (define comp-scale     3.0)  ;; random complex scaling
 (define rand-scale     3.0)  ;; random amp scaling
+(define size-limit    6000)  ;; image size minimum in bytes
+
+;; 3D rendering definitions
 
 ;; target output path; if changing this, edit upload.py as well
 (define file-output-path "output.png")
@@ -197,7 +200,7 @@
   
   ;; emergency break-out block; check if file is less than 4000 bytes
   (when
-    (4000 . > .  (file-size "output.png"))
+    (> size-limit (file-size "output.png"))
     (displayln "Failed size check, restarting... ლ(ಠ益ಠლ)")
     (main))
 

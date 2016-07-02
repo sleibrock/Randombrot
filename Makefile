@@ -9,6 +9,8 @@ test:
 	racket test.rkt
 setup_env:
 	virtualenv dev
+render3d:
+	blender -b -o 3d.png -P bscript.py
 env:
 	source dev/bin/activate
 exit:
