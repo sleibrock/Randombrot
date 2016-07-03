@@ -11,6 +11,9 @@
  the-ops
  random-function
  random-complex
+ random-function
+ get-random-element
+ get-func-string
  randomp
  iterate
  make-fractal
