@@ -7,6 +7,8 @@ run:
 	racket main.rkt
 test:
 	racket test.rkt
+debug:
+	racket debug.rkt
 setup_env:
 	virtualenv dev
 render3d:

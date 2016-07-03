@@ -131,7 +131,16 @@
   (define randc (random-complex))
   (displayln (format "Got ~a" randc))
   (displayln "Creating fractal... (ง’̀-‘́)ง")
-  (time (make-fractal (pfun func) randc target-width target-height file-output-path))
+
+  ;; Creation process; if it throws an exn, fail early and restart main
+  (with-handlers
+    ([exn:fail? (λ (exn) (main))])
+    (time
+     (make-fractal
+      (pfun func)
+      randc
+      target-width target-height
+      file-output-path)))
   
   ;; emergency break-out block; check if file is less than 4000 bytes
   (when
