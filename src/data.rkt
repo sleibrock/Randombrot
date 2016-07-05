@@ -12,19 +12,35 @@
 (define pfun (lambda (p) (proc-fun p)))
 (define pstr (lambda (p) (proc-str p)))
 
+;; Safe division where λa.λ0 -> 0
+(define sdiv
+  (lambda (a b)
+    (if (= b 0)
+        0
+        (/ a b))))
+
 ;; the operations to use to weave functions together
 (define the-ops
   (vector
    (proc "+" +)
    (proc "-" -)
-   (proc "/" (lambda (a b) (if (= b 0) 0 (/ a b)))) ;; safe division \_,0 -> 0
+   (proc "/" sdiv)
    (proc "*" *)))
+
+;; Inverse hyperbolic functions (too complex to be in the list)
+(define (asinh x) (log (+ x (expt (+ (expt x 2) 1) 1/2))))
+(define (acosh x) (log (+ x (expt (- (expt x 2) 1) 1/2))))
+(define (atanh x) (* 1/2 (log (sdiv (+ 1 x) (- 1 x)))))
+(define (asech x) (log (sdiv (+ 1 (expt (- 1 (expt x 2)) 1/2)) x)))
+(define (acsch x) (log (sdiv (+ 1 (expt (+ (expt x 2) 1) 1/2)) x)))
+(define (acoth x) (* 1/2 (log (sdiv (+ x 1) (- x 1)))))
 
 ;; Core functions to render Mandelbrot sets
 (define the-functions 
   (vector
    (proc "z+c"          (λ (z c) (+ c z)))
-   (proc "z^0.5+c"      (λ (z c) (+ c (expt z 0.5))))
+   (proc "z^1/2+c"      (λ (z c) (+ c (expt z 1/2))))
+   (proc "z^1/3+c"      (λ (z c) (+ c (expt z 1/3))))
    (proc "z^2+c"        (λ (z c) (+ c (expt z 2))))
    (proc "z^3+c"        (λ (z c) (+ c (expt z 3))))
    (proc "z^4+c"        (λ (z c) (+ c (expt z 4))))
@@ -49,8 +65,24 @@
    (proc "atan(z^2)+c"  (λ (z c) (+ c (atan (expt z 2)))))
    (proc "exp(z^0.5)+c" (λ (z c) (+ c (exp (expt z -2.0)))))
    (proc "log(z^2)+c"   (λ (z c) (+ c (log (expt z 2)))))
+   (proc "sec(z^2)+c"   (λ (z c) (+ c (sdiv 1 (cos (expt z 2))))))
+   (proc "csc(z^2)+c"   (λ (z c) (+ c (sdiv 1 (sin (expt z 2))))))
+   (proc "cot(z^2)+c"   (λ (z c) (+ c (sdiv 1 (tan (expt z 2))))))
+   (proc "sech(z^2)+c"  (λ (z c) (+ c (sdiv 1 (cosh (expt z 2))))))
+   (proc "csch(z^2)+c"  (λ (z c) (+ c (sdiv 1 (sinh (expt z 2))))))
+   (proc "coth(z^2)+c"  (λ (z c) (+ c (sdiv 1 (tanh (expt z 2))))))
+   (proc "asec(z^2)+c"  (λ (z c) (+ c (acos (sdiv 1 (expt z 2))))))
+   (proc "acsc(z^2)+c"  (λ (z c) (+ c (asin (sdiv 1 (expt z 2))))))
+   (proc "acot(z^2)+c"  (λ (z c) (+ c (atan (sdiv 1 (expt z 2))))))
+   (proc "asinh(z^2)+c" (λ (z c) (+ c (asinh (expt z 2)))))
+   (proc "acosh(z^2)+c" (λ (z c) (+ c (acosh (expt z 2)))))
+   (proc "atanh(z^2)+c" (λ (z c) (+ c (atanh (expt z 2)))))
+   (proc "asech(z^2)+c" (λ (z c) (+ c (asech (expt z 2)))))
+   (proc "acsch(z^2)+c" (λ (z c) (+ c (acsch (expt z 2)))))
+   (proc "acoth(z^2)+c" (λ (z c) (+ c (acoth (expt z 2)))))
    (proc "z-c"          (λ (z c) (- c z)))
-   (proc "z^0.5-c"      (λ (z c) (- c (expt z 0.5))))
+   (proc "z^1/2-c"      (λ (z c) (- c (expt z 1/2))))
+   (proc "z^1/3-c"      (λ (z c) (- c (expt z 1/3))))
    (proc "z^2-c"        (λ (z c) (- c (expt z 2))))
    (proc "z^3-c"        (λ (z c) (- c (expt z 3))))
    (proc "z^4-c"        (λ (z c) (- c (expt z 4))))
@@ -75,6 +107,21 @@
    (proc "atan(z^2)-c"  (λ (z c) (- c (atan (expt z 2)))))
    (proc "exp(z^0.5)-c" (λ (z c) (- c (exp (expt z -2.0)))))
    (proc "log(z^2)-c"   (λ (z c) (- c (log (expt z 2)))))
+   (proc "sec(z^2)+c"   (λ (z c) (- c (sdiv 1 (cos (expt z 2))))))
+   (proc "csc(z^2)+c"   (λ (z c) (- c (sdiv 1 (sin (expt z 2))))))
+   (proc "cot(z^2)+c"   (λ (z c) (- c (sdiv 1 (tan (expt z 2))))))
+   (proc "sech(z^2)+c"  (λ (z c) (- c (sdiv 1 (cosh (expt z 2))))))
+   (proc "csch(z^2)+c"  (λ (z c) (- c (sdiv 1 (sinh (expt z 2))))))
+   (proc "coth(z^2)+c"  (λ (z c) (- c (sdiv 1 (tanh (expt z 2))))))
+   (proc "asec(z^2)+c"  (λ (z c) (- c (acos (sdiv 1 (expt z 2))))))
+   (proc "acsc(z^2)+c"  (λ (z c) (- c (asin (sdiv 1 (expt z 2))))))
+   (proc "acot(z^2)+c"  (λ (z c) (- c (atan (sdiv 1 (expt z 2))))))
+   (proc "asinh(z^2)+c" (λ (z c) (- c (asinh (expt z 2)))))
+   (proc "acosh(z^2)+c" (λ (z c) (- c (acosh (expt z 2)))))
+   (proc "atanh(z^2)+c" (λ (z c) (- c (atanh (expt z 2)))))
+   (proc "asech(z^2)+c" (λ (z c) (- c (asech (expt z 2)))))
+   (proc "acsch(z^2)+c" (λ (z c) (- c (acsch (expt z 2)))))
+   (proc "acoth(z^2)+c" (λ (z c) (- c (acoth (expt z 2)))))
    ))
 
 ;; end
