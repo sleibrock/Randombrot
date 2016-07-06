@@ -3,6 +3,12 @@
 
 # Import blenderpy
 import bpy
+from math import pi, cos, sin, atan2
+from random import random
+
+# De-select all objects from the scene first
+for obj in bpy.data.objects:
+    obj.select = False
 
 # Clear the scene of extra meshes
 meshes = [c.name for c in bpy.data.objects if c.type == "MESH"]
@@ -11,7 +17,7 @@ for o_name in meshes:
 bpy.ops.object.delete()
 
 # Import the obj file
-bpy.ops.import_scene.obj(filepath="/home/steve/Code/Randombrot/fractal.obj")
+bpy.ops.import_scene.obj(filepath="fractal.obj")
 
 # Find and modify the camera's location
 camera = bpy.data.objects["Camera"]
@@ -20,10 +26,27 @@ camera = bpy.data.objects["Camera"]
 
 # Randomize the light location
 lamp = bpy.data.objects["Lamp"]
-lamp.location = (0,0,0) # reset it
+lamp.location = (0,0,0) # reset itl
+lamp.location[0] = (16 * random()) - 8
+lamp.location[1] = (16 * random()) - 8
+lamp.location[2] = (1  + 2*random())
+lamp.rotation_euler[2] = random() * (2*pi)
+lamp.data.type = 'SUN'
+lamp.data.sky.use_atmosphere = True
+lamp.data.sky.atmosphere_distance_factor = random() * 100.0
+lamp.data.color = (random(), random(), random())
+lamp.data.energy = random()
+lamp.data.shadow_color = (random(), random(), random())
 
-# Set the rotation of the camera to be around the 3D point cursor
-camera.select = True
-bpy.context.space_data.pivot_point = 'CURSOR'
-bpy.context.space_data.transform_manipulators = {'ROTATE'}
+# Set the rotation of the camera to be around the (0,0,0) point
+# We will have to use some basic math to pick a random number between 0 and 2*PI to
+# pick the position
+rand_angle = random() * (2*pi)
+r = 10.0
+camera.location[0] = r * cos(rand_angle)
+camera.location[1] = r * sin(rand_angle)
+camera.rotation_euler[0] = 1.01682
+camera.rotation_euler[2] = atan2(*reversed(camera.location[:2])) + (pi/2)
 
+# Render output
+bpy.ops.render.render(write_still=True)

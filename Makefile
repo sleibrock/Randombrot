@@ -7,12 +7,12 @@ run:
 	racket main.rkt
 test:
 	racket test.rkt
-debug:
-	racket debug.rkt
+testobj:
+	racket utils/3d-fractal.rkt
 setup_env:
 	virtualenv dev
 render3d:
-	blender -b -o 3d.png -P bscript.py
+	blender -b -o output.png -P bscript.py
 env:
 	source dev/bin/activate
 exit:

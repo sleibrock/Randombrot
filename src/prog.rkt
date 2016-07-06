@@ -20,6 +20,7 @@
  main
  pfun
  pstr
+ make-3d
  (struct-out proc))
 
 (define target-width   1024) ;; Twitter dimensions are 1024x576 
@@ -36,6 +37,9 @@
 (define size-limit    6000)  ;; image size minimum in bytes
 
 ;; 3D rendering definitions
+(define obj-output "out.obj") ;; output path of where the OBJ is stored
+(define obj-ssize        500) ;; sampling size determines amount of vertices
+(define z-scale            1) ;; used to multiply the height of the OBJ
 
 ;; target output path; if changing this, edit upload.py as well
 (define file-output-path "output.png")
@@ -123,6 +127,30 @@
           1 'solid)
     (send dc draw-point x y))
   (send target save-file fpath 'png))
+
+;; 3D output code
+(define (make-3d fun wid hei fpath)
+  (define op (open-output-file fpath #:exists 'replace))
+  (define sample-size (* wid hei))
+  (for* ([x wid] [y hei]) ; generate a fractal file in similar fashion
+    (define real-x (- (* x-scale (/ x wid)) x-offset))
+    (define real-y (- (* y-scale (/ y hei)) y-offset))
+    (displayln 
+      (format 
+        "v ~a ~a ~a" 
+        (* 16.0 (/ (- x (/ wid 2)) wid)) ;; x property
+        (+ (* z-scale (/ (iterate fun 0 (make-rectangular real-x real-y) 0) 255.0)))
+        (* 16.0 (/ (- y (/ hei 2)) hei))) ;; y property
+      op))
+  (for ([p sample-size]) ; connect the dots with a simple round-the-world
+    (when
+      (not (or (= (modulo p wid) 0) (>= p (- sample-size wid))))
+      (displayln
+        (format
+          "f ~a ~a ~a ~a"
+          p (add1 p) (+ p wid 1) (+ p wid))
+        op)))
+  (close-output-port op))
 
 ;; Main procedure to create and upload fractals
 (define (main)
