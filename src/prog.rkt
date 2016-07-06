@@ -37,9 +37,9 @@
 (define size-limit    6000)  ;; image size minimum in bytes
 
 ;; 3D rendering definitions
-(define obj-output "out.obj") ;; output path of where the OBJ is stored
-(define obj-ssize        500) ;; sampling size determines amount of vertices
-(define z-scale            1) ;; used to multiply the height of the OBJ
+(define obj-output "fractal.obj") ;; output path of where the OBJ is stored
+(define obj-ssize            500) ;; sampling size determines amount of vertices
+(define z-scale                1) ;; used to multiply the height of the OBJ
 
 ;; target output path; if changing this, edit upload.py as well
 (define file-output-path "output.png")
@@ -129,7 +129,7 @@
   (send target save-file fpath 'png))
 
 ;; 3D output code
-(define (make-3d fun wid hei fpath)
+(define (make-3d fun cvar wid hei fpath)
   (define op (open-output-file fpath #:exists 'replace))
   (define sample-size (* wid hei))
   (for* ([x wid] [y hei]) ; generate a fractal file in similar fashion
@@ -139,7 +139,9 @@
       (format 
         "v ~a ~a ~a" 
         (* 16.0 (/ (- x (/ wid 2)) wid)) ;; x property
-        (+ (* z-scale (/ (iterate fun 0 (make-rectangular real-x real-y) 0) 255.0)))
+        (+ (* z-scale (/ ;; scale the iteration [0..255] down to [0..1]
+                       (iterate fun cvar (make-rectangular real-x real-y) 0)
+                       255.0)))
         (* 16.0 (/ (- y (/ hei 2)) hei))) ;; y property
       op))
   (for ([p sample-size]) ; connect the dots with a simple round-the-world
@@ -174,10 +176,21 @@
       file-output-path)))
   
   ;; emergency break-out block; check if file is less than 4000 bytes
-  (when
-    (> size-limit (file-size "output.png"))
+  (when (> size-limit (file-size "output.png"))
     (displayln "Failed size check, restarting... ლ(ಠ益ಠლ)")
     (main))
+
+  ;; a one in five chance of rendering a 3D output instead
+  (when (> 0.2 (random))
+    (displayln "Rendering 3D model ...")
+    (make-3d
+     (pfun func)
+     (randc)
+     obj-ssize obj-ssize
+     obj-output)
+    (system "make render3d")
+    (displayln "Done!"))
+    
 
   ;; upload block 
   (displayln "Uploading... (つ☯ᗜ☯)つ")
