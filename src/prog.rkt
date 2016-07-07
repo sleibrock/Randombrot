@@ -34,12 +34,12 @@
 (define max-iter       255)  ;; max iteration depth
 (define comp-scale     3.0)  ;; random complex scaling
 (define rand-scale     3.0)  ;; random amp scaling
-(define size-limit    6000)  ;; image size minimum in bytes
+(define size-limit     6000)  ;; image size minimum in bytes
 
 ;; 3D rendering definitions
-(define obj-output "fractal.obj") ;; output path of where the OBJ is stored
-(define obj-ssize            500) ;; sampling size determines amount of vertices
-(define z-scale                1) ;; used to multiply the height of the OBJ
+(define obj-output     "fractal.obj") ;; output path of where the OBJ is stored
+(define obj-ssize      500) ;; sampling size determines amount of vertices
+(define z-scale        1) ;; used to multiply the height of the OBJ
 
 ;; target output path; if changing this, edit upload.py as well
 (define file-output-path "output.png")
@@ -180,8 +180,8 @@
     (displayln "Failed size check, restarting... ლ(ಠ益ಠლ)")
     (main))
 
-  ;; a one in five chance of rendering a 3D output instead
-  (when (> 0.2 (random))
+  ;; 50% of rendering a 3D output instead
+  (when (> 0.5 (random))
     (displayln "Rendering 3D model ...")
     (make-3d
      (pfun func)
