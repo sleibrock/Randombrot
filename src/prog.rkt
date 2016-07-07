@@ -185,7 +185,7 @@
     (displayln "Rendering 3D model ...")
     (make-3d
      (pfun func)
-     (randc)
+     randc
      obj-ssize obj-ssize
      obj-output)
     (system "make render3d")
