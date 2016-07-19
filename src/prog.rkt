@@ -14,6 +14,7 @@
  random-function
  get-random-element
  get-func-string
+ color-factory
  randomp
  iterate
  make-fractal
@@ -21,6 +22,7 @@
  pfun
  pstr
  make-3d
+ create-frame
  (struct-out proc))
 
 (define target-width   1024) ;; Twitter dimensions are 1024x576 
@@ -127,6 +129,24 @@
           1 'solid)
     (send dc draw-point x y))
   (send target save-file fpath 'png))
+
+;; Create a frame that wraps the basic image output settings into one 
+;; function that will then create the frame for us
+;; TODO: make this replace the make-fractal function
+(define (create-frame mag xo yo xs ys color-fac)
+  (λ (fun cvar wid hei fpath)
+     (define target (make-bitmap wid hei))
+     (define dc (new bitmap-dc% [bitmap target]))
+     (define iter->color color-fac)
+     (for* ([x wid] [y hei])
+       (define real-x (- (* xs (/ x wid)) xo))
+       (define real-y (- (* ys (/ y hei)) yo))
+       (send dc set-pen
+             (iter->color
+               (iterate fun cvar (make-rectangular real-x real-y) 0))
+             1 'solid)
+       (send dc draw-point x y))
+     (send target save-file fpath 'png)))
 
 ;; 3D output code
 (define (make-3d fun cvar wid hei fpath)

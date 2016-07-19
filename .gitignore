@@ -3,3 +3,5 @@ dev/
 *.obj
 keys.txt
 *\~
+*.mp4
+*.webm
