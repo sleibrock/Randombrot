@@ -138,9 +138,11 @@
      (define target (make-bitmap wid hei))
      (define dc (new bitmap-dc% [bitmap target]))
      (define iter->color color-fac)
+     (define xf (/ xs mag))
+     (define yf (/ ys mag))
      (for* ([x wid] [y hei])
-       (define real-x (- (* xs (/ x wid)) xo))
-       (define real-y (- (* ys (/ y hei)) yo))
+       (define real-x (- (* xf (/ x wid)) xo))
+       (define real-y (- (* yf (/ y hei)) yo))
        (send dc set-pen
              (iter->color
                (iterate fun cvar (make-rectangular real-x real-y) 0))
