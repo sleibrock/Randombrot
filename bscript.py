@@ -36,7 +36,7 @@ lamp.data.sky.use_atmosphere = True
 lamp.data.sky.atmosphere_distance_factor = random() * 100.0
 lamp.data.color = (random(), random(), random())
 lamp.data.energy = random()
-lamp.data.shadow_color = (random(), random(), random())
+lamp.data.shadow_color = (0.2*random(), 0.2*random(), 0.2*random())
 
 # Set the rotation of the camera to be around the (0,0,0) point
 # We will have to use some basic math to pick a random number between 0 and 2*PI to
@@ -45,7 +45,7 @@ rand_angle = random() * (2*pi)
 r = 10.0
 camera.location[0] = r * cos(rand_angle)
 camera.location[1] = r * sin(rand_angle)
-camera.rotation_euler[0] = 1.01682
+camera.rotation_euler[0] = 0.9500 # downwards angle
 camera.rotation_euler[2] = atan2(*reversed(camera.location[:2])) + (pi/2)
 
 # Render output
