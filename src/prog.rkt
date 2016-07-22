@@ -202,8 +202,8 @@
     (displayln "Failed size check, restarting... ლ(ಠ益ಠლ)")
     (main))
 
-  ;; 50% of rendering a 3D output instead
-  (when (> 0.5 (random))
+  ;; 20% of rendering a 3D output instead
+  (when (> 0.2 (random))
     (displayln "Rendering 3D model ...")
     (make-3d
      (pfun func)
