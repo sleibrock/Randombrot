@@ -122,6 +122,14 @@
    (proc "asech(z^2)+c" (λ (z c) (- c (asech (expt z 2)))))
    (proc "acsch(z^2)+c" (λ (z c) (- c (acsch (expt z 2)))))
    (proc "acoth(z^2)+c" (λ (z c) (- c (acoth (expt z 2)))))
+
+   ;; experimental
+   (proc "z+c^2"        (λ (z c) (+ z (expt c 2))))
+   (proc "z^2+c^2"      (λ (z c) (+ (expt z 2) (expt c 2))))
+   (proc "z-c^2"        (λ (z c) (- z (expt c 2))))
+   (proc "z^2-c^2"      (λ (z c) (- (expt z 2) (expt c 2))))
+   (proc "cz^2"         (λ (z c) (* c (expt z 2))))
+   (proc "(1/c)*z^2"    (λ (z c) (sdiv (expt z 2) c)))
    ))
 
 ;; end

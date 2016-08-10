@@ -202,17 +202,16 @@
     (displayln "Failed size check, restarting... ლ(ಠ益ಠლ)")
     (main))
 
-  ;; 20% of rendering a 3D output instead
-  (when (> 0.2 (random))
-    (displayln "Rendering 3D model ...")
-    (make-3d
-     (pfun func)
-     randc
-     obj-ssize obj-ssize
-     obj-output)
-    (system "make render3d")
-    (displayln "Done!"))
-    
+  ;; 5% of rendering a 3D output instead
+  ;(when (> 0.05 (random))
+  ;  (displayln "Rendering 3D model ...")
+  ;  (make-3d
+  ;   (pfun func)
+  ;   randc
+  ;   obj-ssize obj-ssize
+  ;   obj-output)
+  ;  (system "make render3d")
+  ;  (displayln "Done!"))
 
   ;; upload block 
   (displayln "Uploading... (つ☯ᗜ☯)つ")
