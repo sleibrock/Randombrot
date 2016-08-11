@@ -12,6 +12,7 @@
  random-function
  random-complex
  random-function
+ pair-functions
  get-random-element
  get-func-string
  color-factory
@@ -63,8 +64,18 @@
     (list (list lmul pleft) (list rmul pright)))
    (pstr pop)))
 
-;; create a new function with a random op inbetween
-;; aimed to replace the random-chance recursion factory
+;; Piece two functions together given two indices
+(define (pair-functions x y)
+  (define l (vector-ref the-functions x))
+  (define r (vector-ref the-functions y))
+  (define o (get-random-element the-ops))
+  (define a (- (* 2 (random)) 1))
+  (define b (- (* 2 (random)) 1))
+  (proc
+   (get-func-string o l r a b)
+   (λ (z c) ((pfun o) (* a ((pfun l) z c)) (* b ((pfun r) z c))))))
+
+;; Seed two random variables to the pair-function tool
 (define (random-function)
   (define left  (get-random-element the-functions))
   (define right (get-random-element the-functions))
