@@ -1,5 +1,18 @@
 # Randombrot Project
 
+
+# Archival Notice
+
+This software is going into archived mode as of February 3rd, 2023. Recent changes
+to Twitter's API rules deem it impossible to run this bot as a freemium service, 
+therefore, I am putting it into archived mode as it has not had updates made in years.
+
+The project is portable to other platforms that support basic API calls that permit
+image uploading, but I will not be providing this support. No more security updates will
+be made to support the Twitter Python libraries used.
+
+---
+
 This is a Twitter bot that generates randomly created Julia set fractals. 
 The program will create an image, upload it to a Twitter account, 
 and then sleep for an hour, creating at least 24 fractals a day (more or 
